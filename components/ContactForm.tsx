@@ -10,7 +10,7 @@ type Status = "idle" | "sending" | "sent" | "error";
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<FormErrors>({});
-  const successRef = useRef<HTMLHeadingElement>(null);
+  const successRef = useRef<HTMLParagraphElement>(null);
 
   function focusFirstError(errs: FormErrors) {
     const first = contact.fields.find((f) => errs[f.name]);
@@ -47,19 +47,8 @@ export function ContactForm() {
     }
   }
 
-  if (status === "sent") {
-    return (
-      <div className="form-success" role="status">
-        <h2 ref={successRef} tabIndex={-1}>
-          {contact.success.title}
-        </h2>
-        <p>{contact.success.body}</p>
-      </div>
-    );
-  }
-
   return (
-    <form className="contact-form" onSubmit={onSubmit} noValidate>
+    <form onSubmit={onSubmit} noValidate>
       {contact.fields.map((field) => {
         const id = `field-${field.name}`;
         const error = errors[field.name];
@@ -73,15 +62,15 @@ export function ContactForm() {
           "aria-describedby": error ? `${id}-error` : undefined,
         };
         return (
-          <div className="field" key={field.name}>
-            <label htmlFor={id}>{field.label}</label>
-            {field.type === "textarea" ? <textarea rows={5} {...common} /> : <input type={field.type} {...common} />}
+          <label htmlFor={id} key={field.name} className={field.full ? "full" : undefined}>
+            {field.label}
+            {field.type === "textarea" ? <textarea {...common} /> : <input type={field.type} {...common} />}
             {error && (
-              <p className="field-error" id={`${id}-error`}>
+              <span className="field-error" id={`${id}-error`}>
                 {error}
-              </p>
+              </span>
             )}
-          </div>
+          </label>
         );
       })}
 
@@ -90,22 +79,20 @@ export function ContactForm() {
         <input id="hp" name={contact.honeypotName} tabIndex={-1} autoComplete="off" />
       </div>
 
-      {status === "error" && (
-        <p className="form-error" role="alert">
-          {contact.errorGeneric}{" "}
-          {site.contactEmail ? (
-            <>
-              Email us at <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> instead.
-            </>
-          ) : (
-            contact.errorRetry
-          )}
-        </p>
-      )}
-
-      <button type="submit" className="btn btn-primary" disabled={status === "sending"}>
+      <button className="btn" type="submit" disabled={status === "sending"}>
         {status === "sending" ? contact.sendingLabel : contact.submitLabel}
       </button>
+
+      {status === "sent" && (
+        <p className="sent" role="status" ref={successRef} tabIndex={-1}>
+          <b>{contact.success.title}.</b> {contact.success.body}
+        </p>
+      )}
+      {status === "error" && (
+        <p className="sent error" role="alert">
+          {contact.errorGeneric} Email us at <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> instead.
+        </p>
+      )}
     </form>
   );
 }

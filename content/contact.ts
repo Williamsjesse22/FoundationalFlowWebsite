@@ -1,9 +1,9 @@
 /**
- * Contact form schema. Brand Guide §10: name, work email, company, short message. Nothing else.
+ * Contact form schema, matching the fields in Tyler's mockup.
  * The form renderer and the validator (client and server) both read from this,
  * so adding or changing a field is a data edit.
  */
-export type FieldType = "text" | "email" | "textarea";
+export type FieldType = "text" | "email" | "tel" | "textarea";
 
 export interface FormField {
   name: string;
@@ -11,25 +11,23 @@ export interface FormField {
   type: FieldType;
   required: boolean;
   maxLength: number;
-  /** Shown when a required field is empty. Says how to fix it (Brand Guide §11). */
+  /** Shown when a required field is empty. Says how to fix it. */
   requiredMessage: string;
   /** Shown when an email field is not a valid address. */
   invalidMessage?: string;
   autoComplete?: string;
+  /** Renders across both columns of the form grid. */
+  full?: boolean;
 }
 
 export const contact = {
-  eyebrow: "Contact",
-  title: "Book a call",
-  lead: "Tell us about your business and where the work gets stuck. We reply within one business day.",
-  submitLabel: "Send message",
-  sendingLabel: "Sending message",
+  submitLabel: "Book a call",
+  sendingLabel: "Sending",
   success: {
     title: "Message sent",
     body: "We will reply within one business day to set up a time to talk.",
   },
   errorGeneric: "Your message did not send.",
-  errorRetry: "Try again in a few minutes.",
   fields: [
     {
       name: "name",
@@ -39,6 +37,15 @@ export const contact = {
       maxLength: 100,
       autoComplete: "name",
       requiredMessage: "Enter your name.",
+    },
+    {
+      name: "company",
+      label: "Company",
+      type: "text",
+      required: true,
+      maxLength: 150,
+      autoComplete: "organization",
+      requiredMessage: "Enter your company name.",
     },
     {
       name: "email",
@@ -51,21 +58,22 @@ export const contact = {
       invalidMessage: "Enter a work email address, like name@company.com.",
     },
     {
-      name: "company",
-      label: "Company",
-      type: "text",
-      required: true,
-      maxLength: 150,
-      autoComplete: "organization",
-      requiredMessage: "Enter your company name.",
+      name: "phone",
+      label: "Phone",
+      type: "tel",
+      required: false,
+      maxLength: 40,
+      autoComplete: "tel",
+      requiredMessage: "Enter a phone number.",
     },
     {
       name: "message",
-      label: "Message",
+      label: "What are you working toward?",
       type: "textarea",
       required: true,
       maxLength: 2000,
-      requiredMessage: "Tell us briefly what you need help with.",
+      requiredMessage: "Tell us briefly what you're working toward.",
+      full: true,
     },
   ] satisfies FormField[],
   /** Hidden field. Real people never fill it; bots usually do. */

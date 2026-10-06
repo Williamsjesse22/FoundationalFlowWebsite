@@ -1,49 +1,42 @@
 import type { Metadata } from "next";
 import { about } from "@/content/about";
-import { home } from "@/content/home";
-import { ClosingCta, Section } from "@/components/Sections";
-import { PageIntro } from "@/components/PageIntro";
+import { BookCallButton } from "@/components/Button";
 
 export const metadata: Metadata = { title: "About", description: about.lead };
 
+/**
+ * Not linked from the site yet. Still carries the earlier general-AI positioning,
+ * so it needs a rewrite for remodelers once Tyler supplies the copy.
+ */
 export default function AboutPage() {
-  const { bio } = about;
   return (
     <>
-      <PageIntro eyebrow={about.eyebrow} title={about.title} lead={about.lead} />
+      <section className="sec">
+        <div className="head">
+          <span className="dim">{about.eyebrow}</span>
+          <h1>{about.title}</h1>
+          <p>{about.lead}</p>
+        </div>
+      </section>
 
-      {bio && (
-        <Section tone="white" labelledBy="bio-title">
-          <div className="split">
-            <div>
-              <h2 id="bio-title" className="h1">
-                {bio.name}
-              </h2>
-              <p className="muted">{bio.role}</p>
-            </div>
-            <div>
-              {bio.paragraphs.map((p) => (
-                <p key={p} className="body-large">
-                  {p}
-                </p>
-              ))}
-            </div>
-          </div>
-        </Section>
-      )}
-
-      <Section tone={bio ? "offwhite" : "white"}>
-        <div className="stack">
+      <section className="sec">
+        <div className="builds">
           {about.sections.map((s) => (
-            <div key={s.title} className="split" data-reveal>
-              <h2>{s.title}</h2>
-              <p className="body-large">{s.body}</p>
+            <div className="build" key={s.title}>
+              <div className="btext">
+                <h2>{s.title}</h2>
+              </div>
+              <p>{s.body}</p>
             </div>
           ))}
         </div>
-      </Section>
-
-      <ClosingCta title={home.closing.title} />
+        <div className="anything">
+          <p>
+            <b>{about.lead}</b>
+          </p>
+          <BookCallButton />
+        </div>
+      </section>
     </>
   );
 }

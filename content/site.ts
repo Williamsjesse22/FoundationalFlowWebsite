@@ -4,30 +4,20 @@
  */
 export const site = {
   name: "Foundational Flow",
-  descriptor: "AI Strategy & Automation",
-  legalName: "TylerLanaFox LLC",
+  legalName: "Foundational Flow",
+  location: "Urbandale, Iowa",
   url: "https://foundationalflow.com",
+  /** Internal brand line. Not shown on the site (mockup note 1). */
   tagline: "We stay. We build. You lead.",
-  supportingLine: "Long relationships. Real results. No wasted motion.",
   description:
-    "AI strategy and automation for business owners and operations leaders. We build systems that do the repetitive work so your team can focus on what moves the business forward.",
+    "Operations and AI for remodeling companies. We work alongside your team to build the systems that help you grow, so taking on more jobs does not mean adding more overhead.",
 
   /**
-   * Where "Book a call" goes (Calendly, Google Calendar booking page, etc.).
-   * While null, every "Book a call" button links to the contact page instead.
+   * Where every "Book a call" goes. The buttons scroll to the form on the home page,
+   * which emails Tyler. There is deliberately no calendar link.
    */
-  bookingUrl: null as string | null,
+  bookHref: "/#contact",
 
-  /**
-   * Public email shown in the footer and contact page, and used as the fallback when
-   * the form cannot send. While null, it is hidden everywhere.
-   */
-  contactEmail: null as string | null,
-
-  /** Max 4 links (Brand Guide §7, Header). */
-  nav: [
-    { label: "How we work", href: "/how-we-work" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
-  ],
+  /** Where contact form submissions are read, and the address shown in the contact section. */
+  contactEmail: "tyler@foundationalflow.com",
 } as const;

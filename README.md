@@ -2,7 +2,10 @@
 
 Marketing site for foundationalflow.com. Next.js 16 (App Router), TypeScript, plain CSS. Hosted on Vercel.
 
-The **FF Brand Guide v1.0** is the source of truth for design and copy. Section numbers (§) in code comments refer to it.
+Design and copy follow **Tyler's homepage mockup (Draft 1, Sep 30 2026)**, which repositions
+the site from a general AI agency to operations and AI for remodeling firms. The **FF Brand
+Guide v1.0** still governs anything the mockup does not cover; where the two differ, the
+mockup wins and the token block in `app/globals.css` notes the guide value beside it.
 
 ## Run locally
 
@@ -19,20 +22,29 @@ Node 20.9 or newer.
 | To change | Edit |
 |---|---|
 | Any copy on any page | `content/*.ts` (components hold no text) |
-| Colors, spacing, radius, type | tokens at the top of `app/globals.css` (guide §2, verbatim) |
-| Home section order | `app/page.tsx` (guide §10); the Proof band appears once `home.proof` is set |
-| Tyler's bio | `about.bio` in `content/about.ts` (hidden while null) |
+| Colors, spacing, radius, type | tokens at the top of `app/globals.css` |
+| The sample numbers in every product visual | `content/home.ts` |
+| Home section order | `app/page.tsx` |
 | Favicons, Open Graph image | `public/` |
-| "Book a call" destination | `site.bookingUrl` in `content/site.ts` (null = goes to /contact) |
-| Public email address | `site.contactEmail` in `content/site.ts` |
+| "Book a call" destination | `site.bookHref` in `content/site.ts` |
+| Who the form emails, and the address shown on the page | `site.contactEmail` plus `CONTACT_TO_EMAIL` |
 | Contact form fields | `content/contact.ts` (the form and validation both read from it) |
-| Navigation | `site.nav` in `content/site.ts` |
 
-## Brand rules enforced in code
+## Rules enforced in code
 
-- **One teal button per screen.** In-page "Book a call" buttons carry `data-teal-sentinel`; the header hides its own while any is visible.
-- **No loose hex values.** Every color is a `--ff-*` token in `app/globals.css`.
-- Scroll reveal only on elements marked `data-reveal`. Reduced motion is honoured.
+- **One action.** Every button says "Book a call" and points at `site.bookHref`, the contact form.
+- **No loose hex values.** Every color is a token in `app/globals.css`.
+- **Sample data stays labelled.** Each product visual carries a "Sample" chip. The numbers are
+  Tyler's placeholders, not client results, and no client is named anywhere.
+- **Animations rest on the finished state.** The four animated visuals (receipt filing, second
+  brain, lead intake, backlog forecast) loop only when the visitor allows motion; with reduced
+  motion they render complete and still. `lib/motion.ts` holds that logic.
+
+## Pages
+
+`/` is the mockup. `/how-we-work`, `/about` and `/contact` still exist but are not linked from
+the site: the first two carry the earlier general-AI positioning and need rewriting for
+remodelers, and `/contact` is the home page's contact section at its own address.
 
 ## Contact form
 
