@@ -1,53 +1,67 @@
 import type { Metadata } from "next";
 import { process } from "@/content/process";
-import { home } from "@/content/home";
-import { ClosingCta, Section } from "@/components/Sections";
-import { PageIntro } from "@/components/PageIntro";
+import { BookCallButton } from "@/components/Button";
 
 export const metadata: Metadata = {
   title: "How we work",
-  description: "Assess, redesign, implement. What happens in each phase, what you see, and what you get at the end.",
+  description: "What happens in each phase, what you see, and what you get at the end.",
 };
 
+/**
+ * Not linked from the site yet. The home page covers how we work in three steps;
+ * this page still carries the earlier general-AI positioning and needs a rewrite.
+ */
 export default function HowWeWorkPage() {
   const { labels } = process;
   return (
     <>
-      <PageIntro eyebrow={process.intro.eyebrow} title={process.intro.title} lead={process.intro.body} />
+      <section className="sec">
+        <div className="head">
+          <span className="dim">{process.intro.eyebrow}</span>
+          <h1>{process.intro.title}</h1>
+          <p>{process.intro.body}</p>
+        </div>
+      </section>
 
-      {process.phases.map((phase, i) => (
-        <Section key={phase.number} tone={i % 2 === 0 ? "white" : "offwhite"} labelledBy={`phase-${phase.number}`}>
-          <div className="phase">
-            <div>
-              <span className="phase-number">{phase.number}</span>
-              <h2 id={`phase-${phase.number}`} className="h1">
-                {phase.name}
-              </h2>
-              <p className="body-large">{phase.summary}</p>
+      <section className="sec">
+        <div className="builds">
+          {process.phases.map((phase, i) => (
+            <div className={`build${i % 2 ? " flip" : ""}`} key={phase.number}>
+              <div className="btext">
+                <span className="tag">{phase.number}</span>
+                <h2>{phase.name}</h2>
+                <p>{phase.summary}</p>
+              </div>
+              <div className="vis">
+                <div className="vis-head">
+                  <span>{labels.happens}</span>
+                </div>
+                <div className="vis-body">
+                  <ul className="plain-list">
+                    {phase.happens.map((d) => (
+                      <li key={d}>{d}</li>
+                    ))}
+                  </ul>
+                  <div className="why">
+                    <small>{labels.clientSees}</small>
+                    <p>{phase.clientSees}</p>
+                  </div>
+                  <div className="why">
+                    <small>{labels.youGet}</small>
+                    <p>{phase.youGet}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="phase-details">
-              <div data-reveal>
-                <h3>{labels.happens}</h3>
-                <ul className="check-list" role="list">
-                  {phase.happens.map((d) => (
-                    <li key={d}>{d}</li>
-                  ))}
-                </ul>
-              </div>
-              <div data-reveal>
-                <h3>{labels.clientSees}</h3>
-                <p>{phase.clientSees}</p>
-              </div>
-              <div className="deliverable" data-reveal>
-                <h3>{labels.youGet}</h3>
-                <p>{phase.youGet}</p>
-              </div>
-            </div>
-          </div>
-        </Section>
-      ))}
-
-      <ClosingCta title={home.closing.title} />
+          ))}
+        </div>
+        <div className="anything">
+          <p>
+            <b>{process.intro.title}</b>
+          </p>
+          <BookCallButton />
+        </div>
+      </section>
     </>
   );
 }

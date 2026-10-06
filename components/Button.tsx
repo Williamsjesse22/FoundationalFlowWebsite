@@ -1,42 +1,44 @@
 import Link from "next/link";
 import { site } from "@/content/site";
 
-/** Brand Guide §7. Teal is for booking a call only, one per screen. */
-export type ButtonVariant = "teal" | "primary" | "outline" | "ghost";
+export type ButtonVariant = "pri" | "sec";
 
 interface ButtonLinkProps {
   href: string;
   children: React.ReactNode;
   variant?: ButtonVariant;
-  /** Renders the outline/ghost variants for navy backgrounds. */
-  onDark?: boolean;
   className?: string;
-  /** Marks a teal button in page content, so the header hides its own (one teal per screen). */
-  tealSentinel?: boolean;
 }
 
-export function ButtonLink({ href, children, variant = "primary", onDark, className = "", tealSentinel }: ButtonLinkProps) {
-  const cls = ["btn", `btn-${variant}`, onDark && "btn-on-dark", className].filter(Boolean).join(" ");
-  const data = tealSentinel ? { "data-teal-sentinel": "" } : {};
+export function ButtonLink({ href, children, variant = "pri", className = "" }: ButtonLinkProps) {
+  const cls = ["btn", variant, className].filter(Boolean).join(" ");
   return /^https?:\/\//.test(href) ? (
-    <a href={href} className={cls} target="_blank" rel="noopener noreferrer" {...data}>
+    <a href={href} className={cls} target="_blank" rel="noopener noreferrer">
       {children}
     </a>
   ) : (
-    <Link href={href} className={cls} {...data}>
+    <Link href={href} className={cls}>
       {children}
     </Link>
   );
 }
 
 /**
- * Every "Book a call" goes through here, so setting site.bookingUrl updates all of them.
- * In-page instances are sentinels by default; the header's own button opts out.
+ * The site's single action. Every instance points at site.bookHref, which is the
+ * contact form; the form emails Tyler (mockup note 5).
+ *
+ * This is a plain anchor, not next/link, on purpose. The router treats a click on an
+ * already-current hash as a no-op, so a visitor who hit "Book a call", scrolled back up
+ * and clicked again got nothing, and the first click landed short of the form while the
+ * page was still settling. A same-document fragment link is scrolled by the browser
+ * every time and honours the section's scroll-margin, so the form is always where it
+ * should be. From a page without the form it is an ordinary navigation home.
  */
-export function BookCallButton({ inHeader = false, className }: { inHeader?: boolean; className?: string }) {
+export function BookCallButton({ className }: { className?: string }) {
+  const cls = ["btn", "pri", className].filter(Boolean).join(" ");
   return (
-    <ButtonLink href={site.bookingUrl ?? "/contact"} variant="teal" tealSentinel={!inHeader} className={className}>
+    <a href={site.bookHref} className={cls}>
       Book a call
-    </ButtonLink>
+    </a>
   );
 }

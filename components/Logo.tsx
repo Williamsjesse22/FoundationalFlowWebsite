@@ -1,26 +1,45 @@
 import Link from "next/link";
 import { site } from "@/content/site";
 
-/** The mark, verbatim from Brand Guide §3. Color comes from the parent via currentColor. */
-export function LogoMark({ className }: { className?: string }) {
+/**
+ * Three chevrons, one direction, exactly as drawn in Tyler's mockup.
+ * `tone` picks the stroke treatment: "brand" is the navy lockup, "accent" ends in teal,
+ * "accent-light" ends in the brighter teal the mockup uses on navy, and "mono" takes the
+ * parent's color (used for the favicon).
+ */
+export function LogoMark({
+  className,
+  tone = "brand",
+}: {
+  className?: string;
+  tone?: "brand" | "accent" | "accent-light" | "mono";
+}) {
+  const strokes =
+    tone === "mono"
+      ? ["currentColor", "currentColor", "currentColor"]
+      : tone === "accent"
+        ? ["var(--ff-chevron-1)", "var(--ff-chevron-2)", "var(--ff-teal)"]
+        : tone === "accent-light"
+          ? ["var(--ff-chevron-1)", "var(--ff-chevron-2)", "var(--ff-teal-light)"]
+          : ["var(--ff-chevron-1)", "var(--ff-chevron-2)", "var(--ff-navy)"];
+  const opacities = tone === "mono" ? [0.2, 0.55, 1] : [1, 1, 1];
   return (
-    <svg className={className} viewBox="0 0 56 48" fill="none" aria-hidden="true">
-      <path d="M4 6 L22 24 L4 42" stroke="currentColor" strokeWidth="8" strokeOpacity=".2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M18 6 L36 24 L18 42" stroke="currentColor" strokeWidth="8" strokeOpacity=".55" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M32 6 L50 24 L32 42" stroke="currentColor" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+    <svg className={className} viewBox="0 0 800 688" aria-hidden="true">
+      <g fill="none" strokeWidth="100" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="60,60 295,344 60,628" stroke={strokes[0]} strokeOpacity={opacities[0]} />
+        <polyline points="260,60 495,344 260,628" stroke={strokes[1]} strokeOpacity={opacities[1]} />
+        <polyline points="460,60 695,344 460,628" stroke={strokes[2]} strokeOpacity={opacities[2]} />
+      </g>
     </svg>
   );
 }
 
-/** Full lockup: mark, wordmark, descriptor. Min 130px wide per §3. */
+/** Mark plus wordmark. No descriptor line (mockup note 1). */
 export function Logo() {
   return (
-    <Link href="/" className="logo">
-      <LogoMark className="logo-mark" />
-      <span className="logo-text">
-        <span className="logo-name">{site.name}</span>
-        <span className="logo-descriptor">{site.descriptor}</span>
-      </span>
+    <Link href="/" className="brand">
+      <LogoMark className="brand-mark" />
+      {site.name}
     </Link>
   );
 }

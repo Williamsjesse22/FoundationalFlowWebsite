@@ -5,16 +5,14 @@ export const metadata: Metadata = { title: "Page not found" };
 
 export default function NotFound() {
   return (
-    <section className="section tone-navy page-intro glow not-found">
-      <div className="container">
-        <p className="eyebrow">Error 404</p>
+    <section className="sec">
+      <div className="head">
+        <span className="dim">Error 404</span>
         <h1>This page does not exist.</h1>
-        <p className="body-large">It may have moved, or the link may be wrong.</p>
-        <div className="actions">
-          <ButtonLink href="/" variant="outline" onDark>
-            Back to home
-          </ButtonLink>
-        </div>
+        <p>It may have moved, or the link may be wrong.</p>
+      </div>
+      <div className="ctas">
+        <ButtonLink href="/">Back to home</ButtonLink>
       </div>
     </section>
   );

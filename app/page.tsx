@@ -1,105 +1,105 @@
-import Link from "next/link";
-import { home } from "@/content/home";
-import { process } from "@/content/process";
-import { BookCallButton, ButtonLink } from "@/components/Button";
-import { ClosingCta, Section } from "@/components/Sections";
+import { builds, hero, howWeWork, secondBrain, whatWeBuild } from "@/content/home";
+import { BookCallButton } from "@/components/Button";
+import { LogoMark } from "@/components/Logo";
+import { ContactSection } from "@/components/ContactSection";
+import { ReceiptFlow } from "@/components/home/ReceiptFlow";
+import { SecondBrainVis } from "@/components/home/SecondBrainVis";
+import { CallVis } from "@/components/home/CallVis";
+import { ForecastVis } from "@/components/home/ForecastVis";
+import { DashboardVis, FunnelVis, InboxVis } from "@/components/home/StaticVisuals";
+import { BuildPanel, Problem } from "@/components/home/BuildPanel";
+
+/** One visual per build panel, keyed by the id in content/home.ts. */
+const VISUALS: Record<string, React.ReactNode> = {
+  "lead-intake": <CallVis />,
+  forecasting: <ForecastVis />,
+  reporting: <DashboardVis />,
+  hiring: <FunnelVis />,
+  "back-office": <InboxVis />,
+};
 
 export default function HomePage() {
-  const { hero, whatWeDo, proof, people } = home;
   return (
     <>
-      {/* 1. Hero, navy */}
-      <section className="section tone-navy hero glow">
-        <div className="container">
-          <h1 className="display">
-            {hero.headline.map((part, i) => (
-              <span key={i} className={part.dim ? "dim" : undefined}>
-                {i > 0 && " "}
-                {part.text}
-              </span>
-            ))}
-          </h1>
-          <p className="body-large">{hero.body}</p>
-          <div className="actions">
+      <section className="sec hero">
+        <div>
+          <span className="dim">{hero.eyebrow}</span>
+          <h1>{hero.title}</h1>
+          <p className="lede">{hero.lede}</p>
+          <div className="ctas">
             <BookCallButton />
-            <ButtonLink href={hero.secondaryCta.href} variant="outline" onDark>
-              {hero.secondaryCta.label}
-            </ButtonLink>
           </div>
+          <p className="thesis">
+            <LogoMark tone="accent" />
+            {hero.thesis}
+          </p>
+        </div>
+        <ReceiptFlow />
+      </section>
+
+      <section className="sec" id="work" aria-labelledby="work-title">
+        <div className="head">
+          <span className="dim">{whatWeBuild.eyebrow}</span>
+          <h2 id="work-title">{whatWeBuild.title}</h2>
+          <p>{whatWeBuild.body}</p>
+        </div>
+
+        <div className="builds">
+          <div className="brain build">
+            <div>
+              <div className="head brain-head">
+                <h3 className="brain-title">{secondBrain.title}</h3>
+                <Problem>{secondBrain.problem}</Problem>
+                <p>{secondBrain.body}</p>
+              </div>
+              <div className="points">
+                {secondBrain.points.map((point) => (
+                  <div className="point" key={point.title}>
+                    <LogoMark tone="accent" />
+                    <div>
+                      <h4>{point.title}</h4>
+                      <p>{point.body}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <SecondBrainVis />
+          </div>
+
+          {builds.map((build) => (
+            <BuildPanel key={build.id} tag={build.tag} title={build.title} problem={build.problem} body={build.body} flip={build.flip}>
+              {VISUALS[build.id]}
+            </BuildPanel>
+          ))}
+        </div>
+
+        <div className="anything">
+          <p>
+            <b>{whatWeBuild.closer}</b>
+          </p>
+          <BookCallButton />
         </div>
       </section>
 
-      {/* 2. What we do, off-white */}
-      <Section tone="offwhite" labelledBy="what-title">
-        <p className="eyebrow">{whatWeDo.eyebrow}</p>
-        <h2 id="what-title">{whatWeDo.title}</h2>
-        <ul className="card-grid" role="list">
-          {whatWeDo.cards.map((c) => (
-            <li key={c.title} className="card" data-reveal>
-              <h3>{c.title}</h3>
-              <p>{c.body}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      {/* 3. How we work, white */}
-      <Section tone="white" labelledBy="process-title">
-        <div className="section-head">
-          <div>
-            <p className="eyebrow">{home.process.eyebrow}</p>
-            <h2 id="process-title">{home.process.title}</h2>
-          </div>
-          <Link href={home.process.link.href} className="text-link">
-            {home.process.link.label}
-          </Link>
+      <section className="sec" id="how" aria-labelledby="how-title">
+        <div className="head">
+          <span className="dim">{howWeWork.eyebrow}</span>
+          <h2 id="how-title">{howWeWork.title}</h2>
+          <p>{howWeWork.body}</p>
         </div>
-        <ol className="phase-row" role="list">
-          {process.phases.map((phase) => (
-            <li key={phase.number} className="phase-mini" data-reveal>
-              <span className="phase-number">{phase.number}</span>
-              <h3>{phase.name}</h3>
-              <p>{phase.summary}</p>
-            </li>
+        <div className="steps">
+          {howWeWork.steps.map((step) => (
+            <div className="step" key={step.k}>
+              <span className="k">{step.k}</span>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </div>
           ))}
-        </ol>
-      </Section>
-
-      {/* 4. Proof, navy. Hidden until a real result is supplied. */}
-      {proof && (
-        <Section tone="navy" className="proof glow" labelledBy="proof-title">
-          <p className="proof-number">{proof.number}</p>
-          <h2 id="proof-title">{proof.label}</h2>
-          <p>{proof.context}</p>
-        </Section>
-      )}
-
-      {/* 5. The people side, off-white */}
-      <Section tone="offwhite" labelledBy="people-title">
-        <div className="split">
-          <div>
-            <p className="eyebrow">{people.eyebrow}</p>
-            <h2 id="people-title" className="h1">
-              {people.title}
-            </h2>
-          </div>
-          <div>
-            {people.body.map((p) => (
-              <p key={p} className="body-large">
-                {p}
-              </p>
-            ))}
-            <ul className="check-list" role="list">
-              {people.points.map((pt) => (
-                <li key={pt}>{pt}</li>
-              ))}
-            </ul>
-          </div>
         </div>
-      </Section>
+      </section>
 
-      {/* 6. Closing CTA, deep blue */}
-      <ClosingCta title={home.closing.title} />
+      <ContactSection />
     </>
   );
 }
